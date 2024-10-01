@@ -1,0 +1,7 @@
+docker run --rm --pull always --name surrealdb -p 8000:8000 surrealdb/surrealdb:latest \
+   start --log trace --user root --pass root memory
+
+or
+
+docker run --rm --pull always -p 80:8000 -v /mydata:/mydata surrealdb/surrealdb:latest \
+   start --log trace --user root --pass root rocksdb:mydatabase.db

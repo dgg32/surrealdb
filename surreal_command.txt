@@ -1,0 +1,60 @@
+SELECT id, name FROM Drug WHERE ->MAY_TREAT->(Disorder WHERE name = "Alzheimer's Disease")
+
+SELECT <-MAY_TREAT<-Drug.* FROM Disorder WHERE name="Alzheimer's Disease"
+
+
+SELECT name FROM MOA WHERE <-HAS_MOA<-drug->MAY_TREAT->(Disorder WHERE name='Alzheimer\'s Disease')
+
+
+SELECT * FROM MOA WHERE <-HAS_MOA<-drug->MAY_TREAT->(Disorder WHERE name='Alzheimer\'s Disease') FETCH drug;
+
+SELECT ->MAY_TREAT->Disorder<-MAY_TREAT<-Drug FROM Drug:C0018549
+
+SELECT ->MAY_TREAT->Disorder<-MAY_TREAT<-Drug FROM Drug WHERE name = "vinblastine sulfate"
+
+
+SELECT name, ->HAS_MOA->MOA.name FROM Drug WHERE ->MAY_TREAT->(Disorder WHERE name = "Alzheimer's Disease")
+
+
+
+SELECT StudyTitle FROM Trial WHERE Drug:C0070122 in cui
+
+
+SELECT ->MAY_TREAT->Disorder.name AS disease_name FROM Drug WHERE name="naproxen" FETCH disease_name
+SELECT <-MAY_TREAT<-Drug.name FROM Disorder WHERE name="Alzheimer's Disease"
+
+SELECT <-MAY_TREAT<-Drug.name FROM Disorder WHERE name IN ["Alzheimer's Disease", "Migraine Disorders"]
+
+
+SELECT name AS disease_name, <-MAY_TREAT<-drug.name AS drug_name FROM Disorder WHERE name IN ["Alzheimer's Disease", "Migraine Disorders"]
+
+LET $drug_id = (SELECT id FROM Drug WHERE ->MAY_TREAT->(Disorder WHERE name = "Alzheimer's Disease"));
+
+SELECT StudyTitle FROM Trial WHERE array::intersect($drug_id, cui);
+
+
+
+SELECT Trial.StudyTitle
+FROM (SELECT id AS target_drug FROM Drug WHERE ->MAY_TREAT->(Disorder WHERE name = "Alzheimer's Disease"))
+WHERE array::intersect(target_drug, cui)
+
+
+
+SELECT StudyTitle, cui, PreferredUMLSName
+FROM Trial
+WHERE (
+    SELECT id FROM Drug
+    WHERE ->MAY_TREAT->(Disorder WHERE name = "Alzheimer's Disease") AND id IN $parent.cui
+);
+
+
+
+
+SELECT VALUE <-MAY_TREAT<-drug FROM Disorder WHERE name IN ["Alzheimer's Disease", "Migraine Disorders"]
+
+
+LET $target_drugs = array::distinct(array::flatten(SELECT VALUE <-MAY_TREAT<-Drug FROM Disorder WHERE name IN ["Alzheimer's Disease", "Migraine Disorders"]));
+
+SELECT StudyTitle, cui, PreferredUMLSName, Disorder
+        FROM Trial
+        WHERE array::intersect(cui, $target_drugs) != [];
