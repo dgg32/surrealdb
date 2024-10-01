@@ -16,11 +16,8 @@ This repository contains code and data for my article "[Build a Drug Trial Datab
 
 # Prerequisite
 
-  
+OpenAI API  
 
-UMLS free tier
-
-  
 Docker
 
 Python
